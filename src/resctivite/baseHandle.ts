@@ -66,7 +66,7 @@ export const readonlyHandlers = {
 };
 
 
-export const shallowReadonly = {
+export const shallowReadonlyHandlers = {
     get: shallowReadonlyGet,
     set (target: object, key: any, value: any) {
         console.warn(
