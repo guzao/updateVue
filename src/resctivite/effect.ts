@@ -20,7 +20,7 @@ let activeEffect: ReactiveEffect
 let showdTrack: boolean = true
 
 
-class ReactiveEffect {
+export class ReactiveEffect {
 
     private _fn: Function
 
@@ -33,7 +33,7 @@ class ReactiveEffect {
     /** 一个值可能存在多个依赖 放在数组中收集 */
     public dep: any = []
 
-    constructor (fn: Function, _scheduler: Scheduler, _onStop: OnStop) {
+    constructor (fn: Function, _scheduler?: Scheduler, _onStop?: OnStop) {
         this.scheduler = _scheduler
         this.onStop = _onStop
         this._fn = fn
