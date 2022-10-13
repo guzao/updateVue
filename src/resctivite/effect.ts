@@ -17,6 +17,7 @@ const targetMap: Map<object, Map<any, Set<ReactiveEffect>>> = new Map()
 
 let activeEffect: ReactiveEffect
 
+let showdTrack: boolean = true
 
 
 class ReactiveEffect {
@@ -39,8 +40,16 @@ class ReactiveEffect {
     }
 
     run () {
+
+        /** 已经stop后 不在收集依赖 */ 
+        if (!this.active) {
+            return this._fn();
+        }
+
+        showdTrack = true
         activeEffect = this
         const reult = this._fn()
+        showdTrack = false
         return reult
     }
 
@@ -71,12 +80,20 @@ export function track (target: object, key: any) {
         depsMap.set(key, deps)
     }
     
-    if (!activeEffect) return
+    if (!isTracking()) return 
+
     /** 对应的依赖 */
     deps.add(activeEffect)
+    
     // 收集响应式对象key值的依赖
     activeEffect.dep.push(deps)
 
+}
+
+
+/** 是否应该收集依赖 */
+export function isTracking () {
+    return activeEffect !== undefined && showdTrack
 }
 
 
@@ -98,10 +115,9 @@ export function trigger (target: object, key: any) {
 
 }
 
- export function stop (runner: EffectReturnType) {
-    runner.effect.stop()
- }
-
+export function stop (runner: EffectReturnType) {
+runner.effect.stop()
+}
 
 
 

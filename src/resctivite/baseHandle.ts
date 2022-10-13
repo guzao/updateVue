@@ -1,5 +1,6 @@
+import { isObject } from "../shared"
 import { track, trigger } from "./effect"
-import { ReactiveFlags } from "./reactive.ts"
+import { reactive, ReactiveFlags, readonly } from "./reactive.ts"
 
 export function createGetter (isReadonly = false) {
     return function get (target: object, key: any) {
@@ -10,10 +11,14 @@ export function createGetter (isReadonly = false) {
             return isReadonly
         }
 
+
         let res = Reflect.get(target, key)
         if (!isReadonly) {
             // TODO  收集
             track(target, key)
+        }
+        if (isObject(res)) {
+            return isReadonly ? readonly(res) : reactive(res)
         }
         return res
     }
