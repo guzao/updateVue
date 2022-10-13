@@ -1,8 +1,9 @@
+
 import { isObject } from "../shared"
 import { track, trigger } from "./effect"
 import { reactive, ReactiveFlags, readonly } from "./reactive.ts"
 
-export function createGetter (isReadonly = false) {
+export function createGetter (isReadonly = false, shallowReadonly = false) {
     return function get (target: object, key: any) {
 
         if (key == ReactiveFlags.IS_REACTIVE) {
@@ -13,6 +14,11 @@ export function createGetter (isReadonly = false) {
 
 
         let res = Reflect.get(target, key)
+
+         if (shallowReadonly) {
+            return res
+         }
+
         if (!isReadonly) {
             // TODO  收集
             track(target, key)
@@ -38,6 +44,7 @@ const get = createGetter()
 const set = createSetter()
 
 const readonlyGet = createGetter(true)
+const shallowReadonlyGet = createGetter(true, true)
 
 
 
@@ -57,3 +64,15 @@ export const readonlyHandlers = {
         return true;
     }
 };
+
+
+export const shallowReadonly = {
+    get: shallowReadonlyGet,
+    set (target: object, key: any, value: any) {
+        console.warn(
+            `Set operation on key "${String(key)}" failed: target is readonly.`,
+            target
+          );
+        return true;
+    }
+}
