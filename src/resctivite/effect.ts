@@ -67,6 +67,7 @@ class ReactiveEffect {
 
 
 
+
 /** 收集依赖 */
 export function track (target: object, key: any) {
     let depsMap = targetMap.get(target)
@@ -82,13 +83,18 @@ export function track (target: object, key: any) {
     
     if (!isTracking()) return 
 
-    /** 对应的依赖 */
-    deps.add(activeEffect)
-    
-    // 收集响应式对象key值的依赖
-    activeEffect.dep.push(deps)
+    trackEffects(deps)
 
 }
+
+
+export function trackEffects(deps) {
+    /** 对应的依赖 */
+    deps.add(activeEffect)
+    // 收集响应式对象key值的依赖
+    activeEffect.dep.push(deps)
+}
+
 
 
 /** 是否应该收集依赖 */
@@ -105,6 +111,13 @@ export function trigger (target: object, key: any) {
     let depsMap = targetMap.get(target)
     if (!depsMap) return
     let deps = depsMap.get(key)!
+
+    triggerEffects(deps)
+
+}  
+
+
+export function triggerEffects(deps) {
     for (const effect of deps) {
         if ( effect.scheduler ) {
             effect.scheduler ()
@@ -112,11 +125,11 @@ export function trigger (target: object, key: any) {
             effect.run()
         }
     }
-
 }
 
+
 export function stop (runner: EffectReturnType) {
-runner.effect.stop()
+    runner.effect.stop()
 }
 
 
