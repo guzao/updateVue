@@ -1,3 +1,2 @@
-export function add (num: number) {
-    return num * 10
-}
+export { createApp } from './createApp'
+export { h } from './h'

@@ -4,3 +4,5 @@ export function isObject (value) {
 
 
 export const hasChanged = (newValue, value) => !Object.is(newValue, value)
+
+export const createElement = document.createElement
