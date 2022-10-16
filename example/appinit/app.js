@@ -4,25 +4,34 @@ import { h } from "../../lib/mini-vue.esm.js";
 const Foo = {
   nam: 'Foo',
   props: {
-    msg: []
+    msg: 'Fooprops',
+    count: 1
   },
-  setup () {
+  setup (props) {
+    const add = (number) => {
+      console.log(props)
+    }
     return {
-      name: 'foo'
+      name: 'foo',
+      add
     }
   },
   render () {
-    return h('div', { class: 'foo' }, '你好我是' + this.name)
+    console.log(this)
+    return h('div', { class: 'foo', onClick: () => this.add() }, '你好我是' + this.name + this.msg )
   }
 }
-
 
 
 export default {
   name: 'App',
   setup () {
+
     return {
-      msg: 'hi mi-vue'
+      msg: 'hi mi-vue',
+      add () {
+        console.log('App add function ')
+      }
     }
   },
   /** 组件属性 */
@@ -38,13 +47,7 @@ export default {
         h('li', {}, '11'),
         h('li', {}, '11'),
         h('li', {}, '11'),
-        h('li', {}, '11'),
-        h(Foo),
-        h(Foo),
-        h(Foo),
-        h(Foo),
-        h(Foo),
-        h(Foo),
+        h('li', {}, [h(Foo, { onAdd: () => this.add })]),
       ])
     ])
   }

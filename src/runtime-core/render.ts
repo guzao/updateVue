@@ -1,4 +1,4 @@
-import { createElement, isObject } from "src/shared"
+import { ShapeFlags } from 'src/shared/ShapeFlags';
 import { processComponent } from "./component"
 
 
@@ -8,20 +8,17 @@ export function render(vnode: Vnode, rootContainer: Element) {
 
 export function patch (vnode: Vnode, container: Element) {
 
-  const { type } = vnode
+  const { ShapeFlag, type } = vnode
 
-  if (typeof type === 'string') {
+  if (ShapeFlag & ShapeFlags.ELEMENT) {
     // 元素类型
     processElement(vnode, container)
-  } else if (isObject(type)) {
+  } else if (ShapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
     // 组件类型
     processComponent(vnode, container)
   }
 
 }
-
-
-
 
 
 function processElement (vnode: Vnode, contaciner: Element) {
@@ -54,10 +51,21 @@ function mountChildren(children: any[] | undefined, container: HTMLElement) {
   })
 }
 
+const isOn =  (key: string) => /^on/.test(key)
+const getEventName = (key: string) => {
+  return key.substring(2).toLocaleLowerCase()
+}
+
 function mountElmentProps (props: object, el: HTMLElement) {
   for (const key in props) {
     const value = props[ key ]
-    el.setAttribute(key, value)
+    // 检测key是否咦 on开头 ==> 注册事件
+    if (isOn(key)) {
+      const eventNmae = getEventName(key)
+      el.addEventListener(eventNmae, value)
+    } else {
+      el.setAttribute(key, value)
+    }
   }
 }
 

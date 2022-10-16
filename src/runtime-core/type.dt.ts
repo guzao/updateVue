@@ -3,7 +3,9 @@ type Vnode = {
   type: any;
   props: {};
   children?: string | any[];
-  el: Element
+  el?: Element;
+  [key: string]: any;
+  ShapeFlag: number;
 }
 
 
@@ -12,5 +14,6 @@ type ComponentInstance = {
   type: any;
   setupState: {};
   render?
-  proxy?: object
+  proxy?: object,
+  props?: object
 }
