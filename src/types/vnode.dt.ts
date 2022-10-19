@@ -1,17 +1,26 @@
-
-type VnodeType = string | object;
-type VnodeProps =  object;
-type VnodeChildren = string | Vnode [];
-
-type Vnode = {
-    type: VnodeType;
-    props?: VnodeProps;
-    children?: VnodeChildren;
+type Conponent = {
+    props?: object;
+    name?: string;
+    setup?: (pros: object, ctx?: object) => any;
+    render?: () => Vnode | Vnode [];
+    [ key: string ]: any
 }
 
-type ComponnetVnode = {
-    vnode: object,
-    type?: object;
-    props?: VnodeProps;
-    children?: VnodeChildren;
-} 
+type VnodeProps = object
+type VnodeChildren = Vnode [] | string
+
+type Vnode = {
+    type: Conponent | string,
+    props?: object,
+    children?: Vnode [] | string;
+    el?: Element
+}
+
+type ConponentInstance = {
+    vnode: Vnode;
+    type: Conponent;
+    props: object;
+    children: string | Vnode[] | undefined;
+    setupResult?: object;
+    render?: () => Vnode | Vnode []
+}

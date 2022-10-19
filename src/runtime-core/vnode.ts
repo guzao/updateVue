@@ -1,4 +1,4 @@
-export function createVnode (type: VnodeType, props?: VnodeProps, children?: VnodeChildren): Vnode{
+export function createVnode (type: Conponent, props?: VnodeProps, children?: VnodeChildren): Vnode{
     return {
         type,
         props,
